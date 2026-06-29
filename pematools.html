@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pematools — Trade with Deriv</title>
+    <style>
+        /* ==========================================
+           BASE STYLES
+           ========================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0e17;
+            color: #e0e6ed;
+            padding-bottom: 80px;
+            /* space for bottom nav */
+            min-height: 100vh;
+        }
+
+        /* ==========================================
+           APP HEADER
+           ========================================== */
+        #app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #111927;
+            border-bottom: 1px solid #1a2744;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00e676, #00bcd4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #auth-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        #user-status {
+            color: #8899aa;
+        }
+
+        /* ==========================================
+           BUTTONS
+           ========================================== */
+        .btn-primary {
+            background: linear-gradient(135deg, #00e676, #00bcd4);
+            color: #0a0e17;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.95);
+        }
+
+        .btn-secondary {
+            background: #1a2744;
+            color: #e0e6ed;
+            border: 1px solid #2a3a5a;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:active {
+            background: #2a3a5a;
+        }
+
+        /* ==========================================
+           MAIN CONTENT
+           ========================================== */
+        #main-content {
+            padding: 16px 20px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 24px;
+            margin-bottom: 12px;
+            color: #c8d0d8;
+        }
+
+        /* ==========================================
+           CONTROL GROUP
+           ========================================== */
+        .control-group {
+            margin-bottom: 16px;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 13px;
+            color: #8899aa;
+            margin-bottom: 4px;
+        }
+
+        .control-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: #111927;
+            border: 1px solid #1a2744;
+            border-radius: 12px;
+            color: #e0e6ed;
+            font-size: 16px;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        /* ==========================================
+           PRICE DISPLAY
+           ========================================== */
+        .price-display {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding: 16px 20px;
+            background: #111927;
+            border-radius: 16px;
+            border: 1px solid #1a2744;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        #symbol-name {
+            font-size: 16px;
+            color: #8899aa;
+        }
+
+        #current-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        #price-change {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .change-positive {
+            color: #00e676;
+        }
+
+        .change-negative {
+            color: #ff5252;
+        }
+
+        .change-neutral {
+            color: #8899aa;
+        }
+
+        /* ==========================================
+           STATS ROW
+           ========================================== */
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .stat-card {
+            background: #111927;
+            border: 1px solid #1a2744;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #667788;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-top: 4px;
+        }
+
+        /* ==========================================
+           CHART PLACEHOLDER
+           ========================================== */
+        .chart-placeholder {
+            background: #111927;
+            border: 1px solid #1a2744;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            color: #667788;
+            margin-bottom: 20px;
+        }
+
+        .chart-placeholder span {
+            display: block;
+            font-size: 20px;
+        }
+
+        .chart-placeholder small {
+            display: block;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        /* ==========================================
+           LOGIN PROMPT
+           ========================================== */
+        .login-prompt {
+            background: #111927;
+            border: 1px solid #1a2744;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .login-prompt p {
+            color: #8899aa;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+
+        /* ==========================================
+           BALANCE DISPLAY
+           ========================================== */
+        .balance-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #0d1a2b, #1a2744);
+            border-radius: 16px;
+            border: 1px solid #2a3a5a;
+            margin-bottom: 16px;
+        }
+
+        .balance-label {
+            font-size: 14px;
+            color: #8899aa;
+        }
+
+        .balance-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #00e676;
+        }
+
+        /* ==========================================
+           ACTION ROW
+           ========================================== */
+        .action-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .action-row .btn-secondary {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* ==========================================
+           EMPTY STATE
+           ========================================== */
+        .empty-state {
+            color: #667788;
+            font-size: 14px;
+            padding: 16px 0;
+        }
+
+        /* ==========================================
+           BOTTOM NAVIGATION
+           ========================================== */
+        #bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #111927;
+            border-top: 1px solid #1a2744;
+            padding: 8px 0;
+            max-width: 480px;
+            margin: 0 auto;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #667788;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 16px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-btn.active {
+            color: #00e676;
+        }
+
+        .nav-btn .nav-icon {
+            font-size: 22px;
+        }
+
+        .nav-btn .nav-label {
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        /* ==========================================
+           RESPONSIVE
+           ========================================== */
+        @media (min-width: 768px) {
+            #bottom-nav {
+                max-width: 480px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            #main-content {
+                padding: 24px 20px;
+            }
+        }
+
+        /* ==========================================
+           SCROLLBAR
+           ========================================== */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0e17;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a2744;
+            border-radius: 4px;
+        }
+
+        /* ==========================================
+           CONNECTION STATUS
+           ========================================== */
+        #connection-status {
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            text-align: center;
+            background: #1a2744;
+            color: #8899aa;
+            transition: all 0.3s;
+        }
+
+        #connection-status.connected {
+            background: #0d2a1a;
+            color: #00e676;
+        }
+
+        #connection-status.error {
+            background: #2a0d0d;
+            color: #ff5252;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== APP CONTAINER ========== -->
+    <div id="app">
+
+        <!-- ===== HEADER ===== -->
+        <header id="app-header">
+            <div class="logo">
+                <span class="logo-icon">📈</span>
+                <span class="logo-text">Pematools</span>
+            </div>
+            <div id="auth-status">
+                <span id="user-status">Not logged in</span>
+                <button id="login-btn" class="btn-primary">Login</button>
+            </div>
+        </header>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <main id="main-content">
+
+            <!-- ===== PUBLIC MARKET DATA SECTION ===== -->
+            <section id="market-section">
+                <h2>Live Market Data</h2>
+
+                <!-- Connection Status -->
+                <div id="connection-status">
+                    📡 Ready
+                </div>
+
+                <!-- Symbol Selector -->
+                <div class="control-group">
+                    <label for="symbol-select">Symbol</label>
+                    <select id="symbol-select">
+                        <option value="">Loading symbols...</option>
+                    </select>
+                </div>
+
+                <!-- Live Price Display -->
+                <div class="price-display">
+                    <span id="symbol-name">R_100</span>
+                    <span id="current-price">--</span>
+                    <span id="price-change" class="change-neutral">0.00%</span>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <span class="stat-label">Bid</span>
+                        <span id="bid-price" class="stat-value">--</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Ask</span>
+                        <span id="ask-price" class="stat-value">--</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-label">Spread</span>
+                        <span id="spread" class="stat-value">--</span>
+                    </div>
+                </div>
+
+                <!-- Manual Connect Button -->
+                <button id="connect-btn" class="btn-secondary" style="width:100%;margin-bottom:16px;">
+                    🔌 Start Price Updates
+                </button>
+
+                <!-- Chart Placeholder -->
+                <div class="chart-placeholder">
+                    <span>📊 Chart will appear here</span>
+                    <small>(Using ticks_history endpoint)</small>
+                </div>
+
+                <!-- Login Prompt -->
+                <div class="login-prompt">
+                    <p>Sign in to start trading and access your portfolio.</p>
+                    <button id="login-prompt-btn" class="btn-primary">Sign in with Deriv</button>
+                </div>
+            </section>
+
+            <!-- ===== DASHBOARD (Hidden until login) ===== -->
+            <section id="dashboard-section" style="display: none;">
+                <h2>Dashboard</h2>
+
+                <!-- Account Selector -->
+                <div class="control-group">
+                    <label for="account-select">Account</label>
+                    <select id="account-select">
+                        <option value="">Loading accounts...</option>
+                    </select>
+                </div>
+
+                <!-- Balance -->
+                <div class="balance-display">
+                    <span class="balance-label">Balance</span>
+                    <span id="balance-amount" class="balance-value">$0.00</span>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="action-row">
+                    <button class="btn-secondary" id="reset-demo-btn">🔄 Reset Demo</button>
+                    <button class="btn-secondary" id="deposit-btn">💰 Deposit</button>
+                    <button class="btn-secondary" id="withdraw-btn">💳 Withdraw</button>
+                </div>
+
+                <!-- Open Positions -->
+                <h3>Open Positions</h3>
+                <div id="positions-list">
+                    <p class="empty-state">No open positions</p>
+                </div>
+
+                <!-- Recent Transactions -->
+                <h3>Recent Activity</h3>
+                <div id="activity-list">
+                    <p class="empty-state">No recent activity</p>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ===== BOTTOM NAVIGATION ===== -->
+        <nav id="bottom-nav">
+            <button class="nav-btn active" data-view="market">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Market</span>
+            </button>
+            <button class="nav-btn" data-view="trade">
+                <span class="nav-icon">📈</span>
+                <span class="nav-label">Trade</span>
+            </button>
+            <button class="nav-btn" data-view="portfolio">
+                <span class="nav-icon">💼</span>
+                <span class="nav-label">Portfolio</span>
+            </button>
+            <button class="nav-btn" data-view="wallet">
+                <span class="nav-icon">💰</span>
+                <span class="nav-label">Wallet</span>
+            </button>
+            <button class="nav-btn" data-view="admin" id="admin-nav-btn" style="display: none;">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">Admin</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script>
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
+
+        const APP_ID = '33FISXVN0Aun35JMd76sB'; // YOUR APP ID
+
+        // ==========================================
+        // STATE
+        // ==========================================
+
+        const state = {
+            currentSymbol: 'R_100',
+            isAuthenticated: false,
+            priceInterval: null,
+            prevPrice: undefined,
+        };
+
+        // ==========================================
+        // DOM REFERENCES
+        // ==========================================
+
+        const $ = (id) => document.getElementById(id);
+
+        const dom = {
+            symbolSelect: $('symbol-select'),
+            symbolName: $('symbol-name'),
+            currentPrice: $('current-price'),
+            priceChange: $('price-change'),
+            bidPrice: $('bid-price'),
+            askPrice: $('ask-price'),
+            spread: $('spread'),
+            loginBtn: $('login-btn'),
+            loginPromptBtn: $('login-prompt-btn'),
+            userStatus: $('user-status'),
+            accountSelect: $('account-select'),
+            balanceAmount: $('balance-amount'),
+            resetDemoBtn: $('reset-demo-btn'),
+            depositBtn: $('deposit-btn'),
+            withdrawBtn: $('withdraw-btn'),
+            positionsList: $('positions-list'),
+            activityList: $('activity-list'),
+            dashboardSection: $('dashboard-section'),
+            marketSection: $('market-section'),
+            navBtns: document.querySelectorAll('.nav-btn'),
+            adminNavBtn: $('admin-nav-btn'),
+            connectBtn: $('connect-btn'),
+            connectionStatus: $('connection-status'),
+        };
+
+        // ==========================================
+        // UPDATE STATUS
+        // ==========================================
+
+        function updateStatus(text, className) {
+            const el = dom.connectionStatus;
+            if (el) {
+                el.textContent = text;
+                el.className = className || '';
+            }
+        }
+
+        // ==========================================
+        // POPULATE SYMBOLS
+        // ==========================================
+
+        function populateSymbols() {
+            const symbols = [
+                { value: 'R_100', label: 'Volatility 100 Index (R_100)' },
+                { value: 'R_75', label: 'Volatility 75 Index (R_75)' },
+                { value: 'R_50', label: 'Volatility 50 Index (R_50)' },
+                { value: 'R_25', label: 'Volatility 25 Index (R_25)' },
+                { value: '1HZ100V', label: 'Volatility 100 (1s) Index' },
+                { value: 'frxEURUSD', label: 'EUR/USD' },
+                { value: 'frxUSDJPY', label: 'USD/JPY' },
+                { value: 'frxGBPUSD', label: 'GBP/USD' },
+                { value: 'frxXAUUSD', label: 'Gold' },
+                { value: 'frxBTCUSD', label: 'Bitcoin' },
+            ];
+
+            const select = dom.symbolSelect;
+            select.innerHTML = '';
+            symbols.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.value;
+                opt.textContent = s.label;
+                select.appendChild(opt);
+            });
+
+            // Set default
+            select.value = state.currentSymbol;
+
+            // Listen for change
+            select.addEventListener('change', function() {
+                state.currentSymbol = this.value;
+                // Restart price updates
+                if (state.priceInterval) {
+                    clearInterval(state.priceInterval);
+                    state.priceInterval = null;
+                }
+                startPriceUpdates();
+            });
+        }
+
+        // ==========================================
+        // PRICE SIMULATION
+        // ==========================================
+
+        let simulatedPrice = 1200;
+
+        function startPriceUpdates() {
+            if (state.priceInterval) {
+                clearInterval(state.priceInterval);
+                state.priceInterval = null;
+            }
+
+            updateStatus('📡 Simulating live price updates...', '');
+
+            // Random starting price based on symbol
+            const basePrices = {
+                'R_100': 1200,
+                'R_75': 900,
+                'R_50': 600,
+                'R_25': 300,
+                '1HZ100V': 1200,
+                'frxEURUSD': 1.12,
+                'frxUSDJPY': 140,
+                'frxGBPUSD': 1.30,
+                'frxXAUUSD': 2300,
+                'frxBTCUSD': 65000,
+            };
+            simulatedPrice = basePrices[state.currentSymbol] || 1000;
+
+            // Set initial display
+            updatePriceDisplay(simulatedPrice);
+
+            state.priceInterval = setInterval(() => {
+                // Random walk
+                const change = (Math.random() - 0.5) * 2; // -1 to +1
+                simulatedPrice = Math.max(0.01, simulatedPrice + change);
+                updatePriceDisplay(simulatedPrice);
+            }, 1500);
+
+            updateStatus('✅ Price updates active (simulated)', 'connected');
+        }
+
+        function updatePriceDisplay(price) {
+            const bid = price - 0.05;
+            const ask = price + 0.05;
+            const spread = ask - bid;
+
+            dom.currentPrice.textContent = price.toFixed(2);
+            dom.bidPrice.textContent = bid.toFixed(2);
+            dom.askPrice.textContent = ask.toFixed(2);
+            dom.spread.textContent = spread.toFixed(2);
+
+            // Calculate change
+            if (state.prevPrice === undefined) {
+                state.prevPrice = price;
+                dom.priceChange.textContent = '0.00%';
+                dom.priceChange.className = 'change-neutral';
+                return;
+            }
+
+            const changePct = ((price - state.prevPrice) / state.prevPrice) * 100;
+            state.prevPrice = price;
+
+            dom.priceChange.textContent = `${changePct >= 0 ? '+' : ''}${changePct.toFixed(2)}%`;
+            if (changePct > 0.1) {
+                dom.priceChange.className = 'change-positive';
+            } else if (changePct < -0.1) {
+                dom.priceChange.className = 'change-negative';
+            } else {
+                dom.priceChange.className = 'change-neutral';
+            }
+        }
+
+        // ==========================================
+        // AUTHENTICATION (OAuth 2.0)
+        // ==========================================
+
+        function initiateLogin() {
+            // Generate PKCE values
+            const codeVerifier = generateCodeVerifier();
+            const codeChallenge = generateCodeChallenge(codeVerifier);
+            const stateParam = crypto.randomUUID();
+
+            sessionStorage.setItem('pkce_code_verifier', codeVerifier);
+            sessionStorage.setItem('oauth_state', stateParam);
+
+            const authUrl = new URL('https://auth.deriv.com/oauth2/auth');
+            authUrl.searchParams.set('response_type', 'code');
+            authUrl.searchParams.set('client_id', APP_ID);
+            authUrl.searchParams.set('redirect_uri', 'https://pematools.vercel.app/callback');
+            authUrl.searchParams.set('scope', 'trade account_manage payment application_read');
+            authUrl.searchParams.set('state', stateParam);
+            authUrl.searchParams.set('code_challenge', codeChallenge);
+            authUrl.searchParams.set('code_challenge_method', 'S256');
+
+            window.location.href = authUrl.toString();
+        }
+
+        function generateCodeVerifier() {
+            const array = new Uint8Array(64);
+            crypto.getRandomValues(array);
+            return btoa(String.fromCharCode(...array))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=+$/, '');
+        }
+
+        async function generateCodeChallenge(verifier) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(verifier);
+            const digest = await crypto.subtle.digest('SHA-256', data);
+            return btoa(String.fromCharCode(...new Uint8Array(digest)))
+                .replace(/\+/g, '-')
+                .replace(/\//g, '_')
+                .replace(/=+$/, '');
+        }
+
+        // ==========================================
+        // CHECK OAUTH CALLBACK
+        // ==========================================
+
+        function handleOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const returnedState = urlParams.get('state');
+
+            if (code && returnedState) {
+                const savedState = sessionStorage.getItem('oauth_state');
+                if (returnedState !== savedState) {
+                    console.error('❌ State mismatch! Possible CSRF attack.');
+                    return;
+                }
+
+                console.log('✅ Authorization code received:', code);
+                // TODO: Call Cloudflare Worker
+                dom.userStatus.textContent = '✅ Logged in (demo)';
+                showDashboard();
+            }
+        }
+
+        // ==========================================
+        // UI HELPERS
+        // ==========================================
+
+        function showDashboard() {
+            dom.marketSection.style.display = 'none';
+            dom.dashboardSection.style.display = 'block';
+            dom.loginBtn.textContent = 'Logout';
+            dom.userStatus.textContent = '✅ Logged in';
+            state.isAuthenticated = true;
+        }
+
+        // ==========================================
+        // EVENT LISTENERS
+        // ==========================================
+
+        // Login
+        dom.loginBtn.addEventListener('click', () => {
+            if (state.isAuthenticated) {
+                // Logout
+                state.isAuthenticated = false;
+                dom.userStatus.textContent = 'Not logged in';
+                dom.loginBtn.textContent = 'Login';
+                dom.marketSection.style.display = 'block';
+                dom.dashboardSection.style.display = 'none';
+                sessionStorage.clear();
+            } else {
+                initiateLogin();
+            }
+        });
+
+        dom.loginPromptBtn.addEventListener('click', initiateLogin);
+
+        // Connect button
+        dom.connectBtn.addEventListener('click', () => {
+            state.prevPrice = undefined;
+            startPriceUpdates();
+        });
+
+        // Navigation
+        dom.navBtns.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                dom.navBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                console.log('📱 Navigate to:', btn.dataset.view);
+            });
+        });
+
+        // Dashboard actions (placeholders)
+        dom.resetDemoBtn && dom.resetDemoBtn.addEventListener('click', () => {
+            alert('🔄 Reset Demo Balance: This will reset your demo account to $10,000.\n\n(Full implementation coming soon!)');
+        });
+        dom.depositBtn && dom.depositBtn.addEventListener('click', () => {
+            alert('💰 Deposit: Find a payment agent to deposit funds.\n\n(Full implementation coming soon!)');
+        });
+        dom.withdrawBtn && dom.withdrawBtn.addEventListener('click', () => {
+            alert('💳 Withdraw: Find a payment agent to withdraw funds.\n\n(Full implementation coming soon!)');
+        });
+
+        // ==========================================
+        // INITIALIZATION
+        // ==========================================
+
+        function init() {
+            console.log('🚀 Pematools app starting...');
+            console.log(`📱 App ID: ${APP_ID}`);
+
+            handleOAuthCallback();
+
+            populateSymbols();
+
+            // Start price updates after a short delay
+            setTimeout(startPriceUpdates, 500);
+
+            console.log('📋 Instructions:');
+            console.log('1. Prices are simulated for demonstration');
+            console.log('2. Click "Login" to start OAuth flow');
+            console.log('3. Click "Start Price Updates" if prices don\'t move');
+        }
+
+        init();
+    </script>
+
+</body>
+</html>
