@@ -570,7 +570,7 @@
 
         const APP_ID = '33FISXVN0Aun35JMd76sB';
 
-        // === UPDATED WITH YOUR REPLIT URL ===
+        // === CORRECTED — USING THE CORRECT DEPLOYMENT URL ===
         const WORKER_URL = 'https://f5e4eae5-2dce-4103-8cef-d9b7f3d52c4e-0c36g2jtfd5y2qx.spock.replit.dev/api/exchange';
 
         // ==========================================
@@ -655,10 +655,8 @@
                 select.appendChild(opt);
             });
 
-            // Set default
             select.value = state.currentSymbol;
 
-            // Listen for change
             select.addEventListener('change', function() {
                 state.currentSymbol = this.value;
                 if (state.priceInterval) {
@@ -753,7 +751,8 @@
             const authUrl = new URL('https://auth.deriv.com/oauth2/auth');
             authUrl.searchParams.set('response_type', 'code');
             authUrl.searchParams.set('client_id', APP_ID);
-            authUrl.searchParams.set('redirect_uri', 'https://pematooils.vercel.app/callback');
+            // === CORRECTED REDIRECT URL ===
+            authUrl.searchParams.set('redirect_uri', 'https://pematools.vercel.app/callback');
             authUrl.searchParams.set('scope', 'trade account_manage payment application_read');
             authUrl.searchParams.set('state', stateParam);
             authUrl.searchParams.set('code_challenge', codeChallenge);
@@ -800,7 +799,8 @@
                 console.log('✅ Authorization code received:', code);
 
                 const savedVerifier = sessionStorage.getItem('pkce_code_verifier');
-                const redirectUri = 'https://pematooils.vercel.app/callback';
+                // === CORRECTED REDIRECT URL ===
+                const redirectUri = 'https://pematools.vercel.app/callback';
 
                 try {
                     const response = await fetch(WORKER_URL, {
@@ -850,7 +850,6 @@
         // EVENT LISTENERS
         // ==========================================
 
-        // Login
         dom.loginBtn.addEventListener('click', () => {
             if (state.isAuthenticated) {
                 state.isAuthenticated = false;
@@ -866,13 +865,11 @@
 
         dom.loginPromptBtn.addEventListener('click', initiateLogin);
 
-        // Connect button
         dom.connectBtn.addEventListener('click', () => {
             state.prevPrice = undefined;
             startPriceUpdates();
         });
 
-        // Navigation
         dom.navBtns.forEach((btn) => {
             btn.addEventListener('click', () => {
                 dom.navBtns.forEach(b => b.classList.remove('active'));
@@ -881,7 +878,6 @@
             });
         });
 
-        // Dashboard actions
         dom.resetDemoBtn && dom.resetDemoBtn.addEventListener('click', () => {
             alert('🔄 Reset Demo Balance: This will reset your demo account to $10,000.\n\n(Full implementation coming soon!)');
         });
