@@ -568,7 +568,10 @@
         // CONFIGURATION
         // ==========================================
 
-        const APP_ID = '33FISXVN0Aun35JMd76sB'; // YOUR APP ID
+        const APP_ID = '33FISXVN0Aun35JMd76sB';
+
+        // === UPDATED WITH YOUR REPLIT URL ===
+        const WORKER_URL = 'https://f5e4eae5-2dce-4103-8cef-d9b7f3d52c4e-0c36g2jtfd5y2qx.spock.replit.dev/api/exchange';
 
         // ==========================================
         // STATE
@@ -658,7 +661,6 @@
             // Listen for change
             select.addEventListener('change', function() {
                 state.currentSymbol = this.value;
-                // Restart price updates
                 if (state.priceInterval) {
                     clearInterval(state.priceInterval);
                     state.priceInterval = null;
@@ -681,7 +683,6 @@
 
             updateStatus('📡 Simulating live price updates...', '');
 
-            // Random starting price based on symbol
             const basePrices = {
                 'R_100': 1200,
                 'R_75': 900,
@@ -696,12 +697,10 @@
             };
             simulatedPrice = basePrices[state.currentSymbol] || 1000;
 
-            // Set initial display
             updatePriceDisplay(simulatedPrice);
 
             state.priceInterval = setInterval(() => {
-                // Random walk
-                const change = (Math.random() - 0.5) * 2; // -1 to +1
+                const change = (Math.random() - 0.5) * 2;
                 simulatedPrice = Math.max(0.01, simulatedPrice + change);
                 updatePriceDisplay(simulatedPrice);
             }, 1500);
@@ -719,7 +718,6 @@
             dom.askPrice.textContent = ask.toFixed(2);
             dom.spread.textContent = spread.toFixed(2);
 
-            // Calculate change
             if (state.prevPrice === undefined) {
                 state.prevPrice = price;
                 dom.priceChange.textContent = '0.00%';
@@ -745,7 +743,6 @@
         // ==========================================
 
         function initiateLogin() {
-            // Generate PKCE values
             const codeVerifier = generateCodeVerifier();
             const codeChallenge = generateCodeChallenge(codeVerifier);
             const stateParam = crypto.randomUUID();
@@ -756,7 +753,7 @@
             const authUrl = new URL('https://auth.deriv.com/oauth2/auth');
             authUrl.searchParams.set('response_type', 'code');
             authUrl.searchParams.set('client_id', APP_ID);
-            authUrl.searchParams.set('redirect_uri', 'https://pematools.vercel.app/callback');
+            authUrl.searchParams.set('redirect_uri', 'https://pematooils.vercel.app/callback');
             authUrl.searchParams.set('scope', 'trade account_manage payment application_read');
             authUrl.searchParams.set('state', stateParam);
             authUrl.searchParams.set('code_challenge', codeChallenge);
@@ -785,10 +782,10 @@
         }
 
         // ==========================================
-        // CHECK OAUTH CALLBACK
+        // OAUTH CALLBACK HANDLER
         // ==========================================
 
-        function handleOAuthCallback() {
+        async function handleOAuthCallback() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             const returnedState = urlParams.get('state');
@@ -801,9 +798,39 @@
                 }
 
                 console.log('✅ Authorization code received:', code);
-                // TODO: Call Cloudflare Worker
-                dom.userStatus.textContent = '✅ Logged in (demo)';
-                showDashboard();
+
+                const savedVerifier = sessionStorage.getItem('pkce_code_verifier');
+                const redirectUri = 'https://pematooils.vercel.app/callback';
+
+                try {
+                    const response = await fetch(WORKER_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            code: code,
+                            code_verifier: savedVerifier,
+                            redirect_uri: redirectUri
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.access_token) {
+                        console.log('✅ Access token obtained');
+                        sessionStorage.setItem('deriv_access_token', data.access_token);
+                        state.isAuthenticated = true;
+                        dom.userStatus.textContent = '✅ Logged in';
+                        dom.loginBtn.textContent = 'Logout';
+                        showDashboard();
+                        window.history.replaceState({}, document.title, '/');
+                    } else {
+                        console.error('❌ Failed to get access token:', data);
+                        alert('Login failed. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('❌ Token exchange error:', error);
+                    alert('Login failed. Please try again.');
+                }
             }
         }
 
@@ -826,7 +853,6 @@
         // Login
         dom.loginBtn.addEventListener('click', () => {
             if (state.isAuthenticated) {
-                // Logout
                 state.isAuthenticated = false;
                 dom.userStatus.textContent = 'Not logged in';
                 dom.loginBtn.textContent = 'Login';
@@ -855,7 +881,7 @@
             });
         });
 
-        // Dashboard actions (placeholders)
+        // Dashboard actions
         dom.resetDemoBtn && dom.resetDemoBtn.addEventListener('click', () => {
             alert('🔄 Reset Demo Balance: This will reset your demo account to $10,000.\n\n(Full implementation coming soon!)');
         });
@@ -873,12 +899,11 @@
         function init() {
             console.log('🚀 Pematools app starting...');
             console.log(`📱 App ID: ${APP_ID}`);
+            console.log(`🔗 Worker URL: ${WORKER_URL}`);
 
             handleOAuthCallback();
-
             populateSymbols();
 
-            // Start price updates after a short delay
             setTimeout(startPriceUpdates, 500);
 
             console.log('📋 Instructions:');
