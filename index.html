@@ -785,6 +785,7 @@
         // ==========================================
 
         async function handleOAuthCallback() {
+            alert('Callback received!');
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             const returnedState = urlParams.get('state');
