@@ -19,13 +19,9 @@
             background: #0a0e17;
             color: #e0e6ed;
             padding-bottom: 80px;
-            /* space for bottom nav */
             min-height: 100vh;
         }
 
-        /* ==========================================
-           APP HEADER
-           ========================================== */
         #app-header {
             display: flex;
             justify-content: space-between;
@@ -67,9 +63,6 @@
             color: #8899aa;
         }
 
-        /* ==========================================
-           BUTTONS
-           ========================================== */
         .btn-primary {
             background: linear-gradient(135deg, #00e676, #00bcd4);
             color: #0a0e17;
@@ -101,9 +94,6 @@
             background: #2a3a5a;
         }
 
-        /* ==========================================
-           MAIN CONTENT
-           ========================================== */
         #main-content {
             padding: 16px 20px;
             max-width: 480px;
@@ -125,9 +115,6 @@
             color: #c8d0d8;
         }
 
-        /* ==========================================
-           CONTROL GROUP
-           ========================================== */
         .control-group {
             margin-bottom: 16px;
         }
@@ -151,9 +138,6 @@
             -webkit-appearance: none;
         }
 
-        /* ==========================================
-           PRICE DISPLAY
-           ========================================== */
         .price-display {
             display: flex;
             align-items: baseline;
@@ -195,9 +179,6 @@
             color: #8899aa;
         }
 
-        /* ==========================================
-           STATS ROW
-           ========================================== */
         .stats-row {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -229,9 +210,6 @@
             margin-top: 4px;
         }
 
-        /* ==========================================
-           CHART PLACEHOLDER
-           ========================================== */
         .chart-placeholder {
             background: #111927;
             border: 1px solid #1a2744;
@@ -253,9 +231,6 @@
             margin-top: 8px;
         }
 
-        /* ==========================================
-           LOGIN PROMPT
-           ========================================== */
         .login-prompt {
             background: #111927;
             border: 1px solid #1a2744;
@@ -270,9 +245,6 @@
             font-size: 15px;
         }
 
-        /* ==========================================
-           BALANCE DISPLAY
-           ========================================== */
         .balance-display {
             display: flex;
             justify-content: space-between;
@@ -295,9 +267,6 @@
             color: #00e676;
         }
 
-        /* ==========================================
-           ACTION ROW
-           ========================================== */
         .action-row {
             display: flex;
             gap: 10px;
@@ -311,18 +280,12 @@
             text-align: center;
         }
 
-        /* ==========================================
-           EMPTY STATE
-           ========================================== */
         .empty-state {
             color: #667788;
             font-size: 14px;
             padding: 16px 0;
         }
 
-        /* ==========================================
-           BOTTOM NAVIGATION
-           ========================================== */
         #bottom-nav {
             display: flex;
             justify-content: space-around;
@@ -364,24 +327,17 @@
             margin-top: 2px;
         }
 
-        /* ==========================================
-           RESPONSIVE
-           ========================================== */
         @media (min-width: 768px) {
             #bottom-nav {
                 max-width: 480px;
                 left: 50%;
                 transform: translateX(-50%);
             }
-
             #main-content {
                 padding: 24px 20px;
             }
         }
 
-        /* ==========================================
-           SCROLLBAR
-           ========================================== */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -393,9 +349,6 @@
             border-radius: 4px;
         }
 
-        /* ==========================================
-           CONNECTION STATUS
-           ========================================== */
         #connection-status {
             padding: 8px;
             border-radius: 8px;
@@ -420,10 +373,8 @@
 </head>
 <body>
 
-    <!-- ========== APP CONTAINER ========== -->
     <div id="app">
 
-        <!-- ===== HEADER ===== -->
         <header id="app-header">
             <div class="logo">
                 <span class="logo-icon">📈</span>
@@ -435,19 +386,13 @@
             </div>
         </header>
 
-        <!-- ===== MAIN CONTENT ===== -->
         <main id="main-content">
 
-            <!-- ===== PUBLIC MARKET DATA SECTION ===== -->
             <section id="market-section">
                 <h2>Live Market Data</h2>
 
-                <!-- Connection Status -->
-                <div id="connection-status">
-                    📡 Ready
-                </div>
+                <div id="connection-status">📡 Ready</div>
 
-                <!-- Symbol Selector -->
                 <div class="control-group">
                     <label for="symbol-select">Symbol</label>
                     <select id="symbol-select">
@@ -455,14 +400,12 @@
                     </select>
                 </div>
 
-                <!-- Live Price Display -->
                 <div class="price-display">
                     <span id="symbol-name">R_100</span>
                     <span id="current-price">--</span>
                     <span id="price-change" class="change-neutral">0.00%</span>
                 </div>
 
-                <!-- Quick Stats -->
                 <div class="stats-row">
                     <div class="stat-card">
                         <span class="stat-label">Bid</span>
@@ -478,29 +421,24 @@
                     </div>
                 </div>
 
-                <!-- Manual Connect Button -->
                 <button id="connect-btn" class="btn-secondary" style="width:100%;margin-bottom:16px;">
                     🔌 Start Price Updates
                 </button>
 
-                <!-- Chart Placeholder -->
                 <div class="chart-placeholder">
                     <span>📊 Chart will appear here</span>
                     <small>(Using ticks_history endpoint)</small>
                 </div>
 
-                <!-- Login Prompt -->
                 <div class="login-prompt">
                     <p>Sign in to start trading and access your portfolio.</p>
                     <button id="login-prompt-btn" class="btn-primary">Sign in with Deriv</button>
                 </div>
             </section>
 
-            <!-- ===== DASHBOARD (Hidden until login) ===== -->
             <section id="dashboard-section" style="display: none;">
                 <h2>Dashboard</h2>
 
-                <!-- Account Selector -->
                 <div class="control-group">
                     <label for="account-select">Account</label>
                     <select id="account-select">
@@ -508,26 +446,22 @@
                     </select>
                 </div>
 
-                <!-- Balance -->
                 <div class="balance-display">
                     <span class="balance-label">Balance</span>
                     <span id="balance-amount" class="balance-value">$0.00</span>
                 </div>
 
-                <!-- Quick Actions -->
                 <div class="action-row">
                     <button class="btn-secondary" id="reset-demo-btn">🔄 Reset Demo</button>
                     <button class="btn-secondary" id="deposit-btn">💰 Deposit</button>
                     <button class="btn-secondary" id="withdraw-btn">💳 Withdraw</button>
                 </div>
 
-                <!-- Open Positions -->
                 <h3>Open Positions</h3>
                 <div id="positions-list">
                     <p class="empty-state">No open positions</p>
                 </div>
 
-                <!-- Recent Transactions -->
                 <h3>Recent Activity</h3>
                 <div id="activity-list">
                     <p class="empty-state">No recent activity</p>
@@ -536,7 +470,6 @@
 
         </main>
 
-        <!-- ===== BOTTOM NAVIGATION ===== -->
         <nav id="bottom-nav">
             <button class="nav-btn active" data-view="market">
                 <span class="nav-icon">📊</span>
@@ -562,7 +495,9 @@
 
     </div>
 
-    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ==========================================
+    JAVASCRIPT
+    ========================================== -->
     <script>
         // ==========================================
         // CONFIGURATION
@@ -570,7 +505,8 @@
 
         const APP_ID = '33FISXVN0Aun35JMd76sB';
 
-        // === CORRECTED — USING THE CORRECT DEPLOYMENT URL ===
+        // ===== THIS IS THE URL TO YOUR REPLIT SERVER =====
+        // Make sure it matches exactly what you see in Replit preview.
         const WORKER_URL = 'https://f5e4eae5-2dce-4103-8cef-d9b7f3d52c4e-0c36g2jtfd5y2qx.spock.replit.dev/api/exchange';
 
         // ==========================================
@@ -751,7 +687,6 @@
             const authUrl = new URL('https://auth.deriv.com/oauth2/auth');
             authUrl.searchParams.set('response_type', 'code');
             authUrl.searchParams.set('client_id', APP_ID);
-            // === CORRECTED REDIRECT URL ===
             authUrl.searchParams.set('redirect_uri', 'https://pematools.vercel.app/callback');
             authUrl.searchParams.set('scope', 'trade account_manage payment application_read');
             authUrl.searchParams.set('state', stateParam);
@@ -781,11 +716,10 @@
         }
 
         // ==========================================
-        // OAUTH CALLBACK HANDLER
+        // OAUTH CALLBACK HANDLER (UPDATED)
         // ==========================================
 
         async function handleOAuthCallback() {
-            alert('Callback received!');
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
             const returnedState = urlParams.get('state');
@@ -794,14 +728,17 @@
                 const savedState = sessionStorage.getItem('oauth_state');
                 if (returnedState !== savedState) {
                     console.error('❌ State mismatch! Possible CSRF attack.');
+                    alert('State mismatch! Please try again.');
                     return;
                 }
 
                 console.log('✅ Authorization code received:', code);
+                alert('Callback received!');
 
                 const savedVerifier = sessionStorage.getItem('pkce_code_verifier');
-                // === CORRECTED REDIRECT URL ===
                 const redirectUri = 'https://pematools.vercel.app/callback';
+
+                console.log('Sending token exchange request to:', WORKER_URL);
 
                 try {
                     const response = await fetch(WORKER_URL, {
@@ -814,7 +751,9 @@
                         })
                     });
 
+                    console.log('Response status:', response.status);
                     const data = await response.json();
+                    console.log('Response data:', data);
 
                     if (data.access_token) {
                         console.log('✅ Access token obtained');
@@ -826,11 +765,11 @@
                         window.history.replaceState({}, document.title, '/');
                     } else {
                         console.error('❌ Failed to get access token:', data);
-                        alert('Login failed. Please try again.');
+                        alert('Login failed. Server response: ' + JSON.stringify(data));
                     }
                 } catch (error) {
                     console.error('❌ Token exchange error:', error);
-                    alert('Login failed. Please try again.');
+                    alert('Login failed. Error: ' + error.message + ' (check console for details)');
                 }
             }
         }
