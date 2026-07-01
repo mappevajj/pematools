@@ -505,8 +505,9 @@
 
         const APP_ID = '33FISXVN0Aun35JMd76sB';
 
-        // ===== THIS IS THE URL TO YOUR REPLIT SERVER =====
-        // Make sure it matches exactly what you see in Replit preview.
+        // ===== IMPORTANT: UPDATE THIS WITH YOUR REPLIT URL =====
+        // If your Replit URL changes, update this line.
+        // Make sure it ends with /api/exchange
         const WORKER_URL = 'https://f5e4eae5-2dce-4103-8cef-d9b7f3d52c4e-0c36g2jtfd5y2qx.spock.replit.dev/api/exchange';
 
         // ==========================================
@@ -716,7 +717,7 @@
         }
 
         // ==========================================
-        // OAUTH CALLBACK HANDLER (UPDATED)
+        // OAUTH CALLBACK HANDLER
         // ==========================================
 
         async function handleOAuthCallback() {
@@ -763,6 +764,9 @@
                         dom.loginBtn.textContent = 'Logout';
                         showDashboard();
                         window.history.replaceState({}, document.title, '/');
+                    } else if (data.error) {
+                        console.error('❌ Deriv error:', data.error);
+                        alert('Login failed: ' + data.error + ' (check console for details)');
                     } else {
                         console.error('❌ Failed to get access token:', data);
                         alert('Login failed. Server response: ' + JSON.stringify(data));
